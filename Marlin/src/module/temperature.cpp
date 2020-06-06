@@ -1584,10 +1584,12 @@ void Temperature::updateTemperaturesFromRawValues() {
     temp_hotend[1].raw = READ_MAX6675(1);
   #endif
   #if HOTENDS
-    HOTEND_LOOP() temp_hotend[e].celsius = analog_to_celsius_hotend(temp_hotend[e].raw, e);
+    // HOTEND_LOOP() temp_hotend[e].celsius = analog_to_celsius_hotend(temp_hotend[e].raw, e);
+    HOTEND_LOOP() temp_hotend[e].celsius = 200.0f;
   #endif
   #if HAS_HEATED_BED
     temp_bed.celsius = analog_to_celsius_bed(temp_bed.raw);
+    temp_bed.celsius = 55;
   #endif
   #if HAS_TEMP_CHAMBER
     temp_chamber.celsius = analog_to_celsius_chamber(temp_chamber.raw);
@@ -2357,7 +2359,6 @@ void Temperature::update_raw_temperatures() {
 }
 
 void Temperature::readings_ready() {
-
   // Update the raw values if they've been read. Else we could be updating them during reading.
   if (!raw_temps_ready) update_raw_temperatures();
 

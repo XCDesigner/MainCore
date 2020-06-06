@@ -25,7 +25,7 @@
 
 #include "../../inc/MarlinConfigPre.h"
 
-#if ENABLED(EEPROM_SETTINGS)
+#if ENABLED(EEPROM_SETTINGS) && DISABLED(FLASH_PARTITION_MANAGER)
 
 #include "../shared/eeprom_api.h"
 
@@ -65,5 +65,49 @@ bool PersistentStore::read_data(int &pos, uint8_t* value, size_t size, uint16_t 
 
 size_t PersistentStore::capacity() { return E2END + 1; }
 
-#endif // EEPROM_SETTINGS
+#elif ENABLED(EEPROM_SETTINGS) && ENABLED(FLASH_PARTITION_MANAGER) // EEPROM_SETTINGS
+
+#include "../shared/eeprom_api.h"
+#include "PartitionManager.h"
+
+bool PersistentStore::access_start() { 
+  PartitionManager::RestoreSetting();
+  return true; 
+}
+
+bool PersistentStore::access_finish() { 
+  PartitionManager::StoreSetting();
+  return true; 
+}
+
+
+bool PersistentStore::write_data(int &pos, const uint8_t *value, size_t size, uint16_t *crc) {
+  while (size--) {
+    uint32_t p = pos;
+    uint8_t v = *value;
+    
+    PartitionManager::SettingWriteOneByte(p, v);
+    crc16(crc, &v, 1);
+    pos++;
+    value++;
+  };
+  return false;
+}
+
+bool PersistentStore::read_data(int &pos, uint8_t* value, size_t size, uint16_t *crc, const bool writing/*=true*/) {
+  do {
+    uint32_t p = pos;
+    uint8_t c = PartitionManager::SettingReadOneByte(p);
+    if (writing) *value = c;
+    crc16(crc, &c, 1);
+    pos++;
+    value++;
+  } while (--size);
+  return false;
+}
+
+size_t PersistentStore::capacity() { return PartitionManager::GetCapacity(); }
+
+#endif
+
 #endif // STM32GENERIC && (STM32F4 || STM32F7)

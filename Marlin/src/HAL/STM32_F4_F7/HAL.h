@@ -52,7 +52,7 @@
 #elif SERIAL_PORT == -1
   #define MYSERIAL0 SerialUSB
 #elif SERIAL_PORT == 1
-  #define MYSERIAL0 SerialUART1
+  #define MYSERIAL0 Serial1
 #elif SERIAL_PORT == 2
   #define MYSERIAL0 SerialUART2
 #elif SERIAL_PORT == 3

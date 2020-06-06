@@ -122,7 +122,7 @@ uint8_t spiRec() {
 void spiRead(uint8_t* buf, uint16_t nbyte) {
   SPI.beginTransaction(spiConfig);
   #ifdef STM32GENERIC
-    SPI.dmaTransfer(0, const_cast<uint8_t*>(buf), nbyte);
+    // SPI.dmaTransfer(0, const_cast<uint8_t*>(buf), nbyte);
   #else
     SPI.transfer((uint8_t*)buf, nbyte);
   #endif
@@ -154,7 +154,7 @@ void spiSendBlock(uint8_t token, const uint8_t* buf) {
   SPI.beginTransaction(spiConfig);
   SPI.transfer(token);
   #ifdef STM32GENERIC
-    SPI.dmaSend(const_cast<uint8_t*>(buf), 512);
+    // SPI.dmaSend(const_cast<uint8_t*>(buf), 512);
   #else
     SPI.transfer((uint8_t*)buf, nullptr, 512);
   #endif

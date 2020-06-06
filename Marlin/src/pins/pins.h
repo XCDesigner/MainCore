@@ -562,7 +562,8 @@
   #include "stm32f4/pins_FLYF407ZG.h"           // STM32F4                                env:FLYF407ZG
 #elif MB(MKS_ROBIN2)
   #include "stm32f4/pins_MKS_ROBIN2.h"          // STM32F4                                env:MKS_ROBIN2
-
+#elif MB(IVI_F407)
+  #include "stm32f4/pins_IVI_F4.h"
 //
 // ARM Cortex M7
 //

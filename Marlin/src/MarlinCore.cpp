@@ -1157,6 +1157,11 @@ void setup() {
     SETUP_RUN(max7219.init());
   #endif
 
+  SET_OUTPUT(MOTOR_PWR_PIN);
+  digitalWrite(MOTOR_PWR_PIN, 0);
+  _delay_ms(1500);
+  digitalWrite(MOTOR_PWR_PIN, 1);
+
   marlin_state = MF_RUNNING;
 
   SETUP_LOG("setup() completed.");
